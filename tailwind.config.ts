@@ -80,10 +80,47 @@ export default {
             height: "0",
           },
         },
+        "glow-pulse": {
+          "0%, 100%": {
+            boxShadow: "0 0 20px hsla(45 100% 51% / 0.3)",
+          },
+          "50%": {
+            boxShadow: "0 0 40px hsla(45 100% 51% / 0.6)",
+          },
+        },
+        "float": {
+          "0%, 100%": {
+            transform: "translateY(0px)",
+          },
+          "50%": {
+            transform: "translateY(-10px)",
+          },
+        },
+        "shine": {
+          "0%": {
+            backgroundPosition: "200% center",
+          },
+          "100%": {
+            backgroundPosition: "-200% center",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
+        "shine": "shine 3s linear infinite",
+      },
+      backgroundImage: {
+        "gradient-gold": "var(--gradient-gold)",
+        "gradient-purple": "var(--gradient-purple)",
+        "gradient-card": "var(--gradient-card)",
+      },
+      boxShadow: {
+        "glow-gold": "var(--glow-gold)",
+        "glow-purple": "var(--glow-purple)",
+        "card": "var(--shadow-card)",
       },
     },
   },
