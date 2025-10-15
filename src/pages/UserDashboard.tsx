@@ -110,10 +110,6 @@ const UserDashboard = () => {
             {/* Tickets Grid */}
             <div className="lg:col-span-2">
               <Card className="border-border bg-card p-6">
-                <h2 className="mb-4 flex items-center gap-2 text-2xl font-bold text-foreground">
-                  <Ticket className="h-6 w-6 text-primary" />
-                  Available Tickets
-                </h2>
                 <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
                   {selectedLottery.tickets.map((ticket) => (
                     <TicketCard
@@ -137,11 +133,21 @@ const UserDashboard = () => {
                 <div className="space-y-4">
                   <div className="rounded-lg border border-border bg-background/50 p-4">
                     <p className="mb-1 text-sm text-muted-foreground">Selected Tickets</p>
-                    <p className="text-2xl font-bold text-foreground">{selectedTickets.length}</p>
+                    <p 
+                      key={selectedTickets.length}
+                      className="text-2xl font-bold text-foreground animate-scale-in"
+                    >
+                      {selectedTickets.length}
+                    </p>
                   </div>
                   <div className="rounded-lg border border-border bg-background/50 p-4">
                     <p className="mb-1 text-sm text-muted-foreground">Total Cost</p>
-                    <p className="text-2xl font-bold text-primary">{totalCost.toFixed(2)} ETH</p>
+                    <p 
+                      key={totalCost}
+                      className="text-2xl font-bold text-primary animate-scale-in"
+                    >
+                      {totalCost.toFixed(2)} ETH
+                    </p>
                   </div>
                   <div className="rounded-lg border border-border bg-background/50 p-4">
                     <p className="mb-1 text-sm text-muted-foreground">Your Balance</p>

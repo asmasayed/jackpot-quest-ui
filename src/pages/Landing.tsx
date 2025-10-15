@@ -40,14 +40,6 @@ const Landing = () => {
               >
                 Participate Now
               </Button>
-              <Button
-                onClick={() => navigate("/winners")}
-                size="lg"
-                variant="outline"
-                className="border-primary/30 px-8 text-lg text-primary hover:bg-primary/10"
-              >
-                View Winners
-              </Button>
             </div>
           </div>
         </div>
