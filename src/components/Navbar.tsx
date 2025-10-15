@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Home, Ticket, Shield, Trophy, Wallet } from "lucide-react";
 import { useLottery } from "@/contexts/LotteryContext";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "./ThemeToggle";
 
 const Navbar = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const Navbar = () => {
             <Trophy className="h-6 w-6 text-primary-foreground" />
           </div>
           <span className="text-xl font-bold bg-gradient-gold bg-clip-text text-transparent">
-            LuckyChain
+            BetY
           </span>
         </Link>
 
@@ -86,6 +87,7 @@ const Navbar = () => {
           >
             Add Funds
           </Button>
+          <ThemeToggle/>
         </div>
       </div>
     </nav>

@@ -72,7 +72,7 @@ const LotteryCard = ({ lottery }: LotteryCardProps) => {
         </div>
 
         {/* Progress Bar */}
-        <div className="space-y-2">
+       {/*  <div className="space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Progress</span>
             <span>{progress.toFixed(0)}%</span>
@@ -83,7 +83,7 @@ const LotteryCard = ({ lottery }: LotteryCardProps) => {
               style={{ width: `${progress}%` }}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Winner Info */}
         {lottery.winner && (

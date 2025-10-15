@@ -20,12 +20,13 @@ const Landing = () => {
           <div className="mx-auto max-w-3xl space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
               <Sparkles className="h-4 w-4" />
-              Decentralized Lottery Platform
+             Lottery platform for Beginers
             </div>
             <h1 className="text-5xl font-bold leading-tight text-foreground md:text-7xl">
               Win Big with{" "}
+              <br />
               <span className="bg-gradient-gold bg-clip-text text-transparent animate-shine bg-[length:200%_auto]">
-                LuckyChain
+                BetY
               </span>
             </h1>
             <p className="text-xl text-muted-foreground">
