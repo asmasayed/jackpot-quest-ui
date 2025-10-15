@@ -3,9 +3,8 @@ import { useLocation } from "react-router-dom";
 import { useLottery } from "@/contexts/LotteryContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import TicketCard from "@/components/TicketCard";
 import { toast } from "sonner";
-import { ShoppingCart, Trophy, Ticket, CheckCircle } from "lucide-react";
+import { ShoppingCart, Trophy, Ticket, CheckCircle, Plus, Minus } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -13,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 const UserDashboard = () => {
   const location = useLocation();
@@ -22,8 +22,11 @@ const UserDashboard = () => {
 
   const activeLotteries = lotteries.filter((l) => l.active);
   const selectedLottery = lotteries.find((l) => l.id === selectedLotteryId);
-  const totalCost = selectedTickets.length * (selectedLottery?.ticketPrice || 0);
+  const [ticketCount, setTicketCount] = useState(1);
+  const totalCost = ticketCount * (selectedLottery?.ticketPrice || 0);
   const myTickets = purchasedTickets.find((p) => p.lotteryId === selectedLotteryId);
+  
+  const availableTickets = selectedLottery?.tickets.filter(t => !t.sold).length || 0;
 
   useEffect(() => {
     if (location.state?.lotteryId) {
@@ -33,16 +36,20 @@ const UserDashboard = () => {
     }
   }, [location.state, activeLotteries, selectedLotteryId]);
 
-  const handleToggleTicket = (ticketNumber: number) => {
-    setSelectedTickets((prev) =>
-      prev.includes(ticketNumber)
-        ? prev.filter((n) => n !== ticketNumber)
-        : [...prev, ticketNumber]
-    );
+  const handleIncrement = () => {
+    if (ticketCount < availableTickets) {
+      setTicketCount(prev => prev + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (ticketCount > 1) {
+      setTicketCount(prev => prev - 1);
+    }
   };
 
   const handleBuyTickets = () => {
-    if (selectedTickets.length === 0) {
+    if (ticketCount === 0) {
       toast.error("Please select at least one ticket");
       return;
     }
@@ -52,13 +59,19 @@ const UserDashboard = () => {
       return;
     }
 
-    const success = buyTickets(selectedLotteryId, selectedTickets);
+    // Get available ticket numbers
+    const availableTicketNumbers = selectedLottery?.tickets
+      .filter(t => !t.sold)
+      .slice(0, ticketCount)
+      .map(t => t.number) || [];
+
+    const success = buyTickets(selectedLotteryId, availableTicketNumbers);
     if (success) {
-      toast.success(`Successfully purchased ${selectedTickets.length} ticket(s)!`, {
+      toast.success(`Successfully purchased ${ticketCount} ticket(s)!`, {
         description: `Total cost: ${totalCost.toFixed(2)} ETH`,
         icon: <CheckCircle className="h-5 w-5" />,
       });
-      setSelectedTickets([]);
+      setTicketCount(1);
     } else {
       toast.error("Failed to purchase tickets. Please try again.");
     }
@@ -107,18 +120,68 @@ const UserDashboard = () => {
 
         {selectedLottery && (
           <div className="grid gap-8 lg:grid-cols-3">
-            {/* Tickets Grid */}
+            {/* Animated Ticket Selector */}
             <div className="lg:col-span-2">
-              <Card className="border-border bg-card p-6">
-                <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-                  {selectedLottery.tickets.map((ticket) => (
-                    <TicketCard
-                      key={ticket.id}
-                      ticket={ticket}
-                      selected={selectedTickets.includes(ticket.number)}
-                      onToggle={() => handleToggleTicket(ticket.number)}
-                    />
-                  ))}
+              <Card className="border-border bg-card p-8">
+                <div className="flex flex-col items-center justify-center space-y-8">
+                  {/* Animated Ticket Icon */}
+                  <div className="relative">
+                    {Array.from({ length: Math.min(ticketCount, 10) }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={cn(
+                          "absolute flex items-center justify-center rounded-lg border-2 border-primary bg-primary/10 p-6 shadow-glow-gold transition-all duration-300",
+                          "animate-scale-in"
+                        )}
+                        style={{
+                          transform: `rotate(${i * 5}deg) translateY(${i * -4}px)`,
+                          zIndex: 10 - i,
+                          left: `${i * 2}px`,
+                        }}
+                      >
+                        <Ticket className="h-16 w-16 text-primary" />
+                      </div>
+                    ))}
+                    <div className="h-32 w-32" />
+                  </div>
+
+                  {/* Ticket Counter Display */}
+                  <div className="text-center">
+                    <p className="mb-2 text-sm text-muted-foreground">Number of Tickets</p>
+                    <p
+                      key={ticketCount}
+                      className="text-6xl font-bold text-primary animate-scale-in"
+                    >
+                      {ticketCount}
+                    </p>
+                  </div>
+
+                  {/* Increment/Decrement Controls */}
+                  <div className="flex items-center gap-4">
+                    <Button
+                      onClick={handleDecrement}
+                      disabled={ticketCount <= 1}
+                      size="lg"
+                      variant="outline"
+                      className="h-14 w-14 rounded-full border-primary/30 hover:bg-primary/10"
+                    >
+                      <Minus className="h-6 w-6" />
+                    </Button>
+                    <div className="flex items-center gap-2 rounded-lg border border-border bg-background/50 px-6 py-3">
+                      <Ticket className="h-5 w-5 text-primary" />
+                      <span className="text-sm font-semibold text-muted-foreground">
+                        {availableTickets} available
+                      </span>
+                    </div>
+                    <Button
+                      onClick={handleIncrement}
+                      disabled={ticketCount >= availableTickets}
+                      size="lg"
+                      className="h-14 w-14 rounded-full bg-gradient-gold hover:opacity-90"
+                    >
+                      <Plus className="h-6 w-6" />
+                    </Button>
+                  </div>
                 </div>
               </Card>
             </div>
@@ -134,10 +197,10 @@ const UserDashboard = () => {
                   <div className="rounded-lg border border-border bg-background/50 p-4">
                     <p className="mb-1 text-sm text-muted-foreground">Selected Tickets</p>
                     <p 
-                      key={selectedTickets.length}
+                      key={ticketCount}
                       className="text-2xl font-bold text-foreground animate-scale-in"
                     >
-                      {selectedTickets.length}
+                      {ticketCount}
                     </p>
                   </div>
                   <div className="rounded-lg border border-border bg-background/50 p-4">
@@ -157,11 +220,10 @@ const UserDashboard = () => {
                   </div>
                   <Button
                     onClick={handleBuyTickets}
-                    disabled={selectedTickets.length === 0 || walletBalance < totalCost}
+                    disabled={ticketCount === 0 || walletBalance < totalCost || availableTickets === 0}
                     className="w-full bg-gradient-gold text-lg font-semibold text-primary-foreground hover:opacity-90"
                   >
-                    Buy {selectedTickets.length > 0 ? selectedTickets.length : ""} Ticket
-                    {selectedTickets.length !== 1 ? "s" : ""}
+                    Buy {ticketCount} Ticket{ticketCount !== 1 ? "s" : ""}
                   </Button>
                 </div>
               </Card>
