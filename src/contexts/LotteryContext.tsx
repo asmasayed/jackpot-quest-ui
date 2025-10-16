@@ -30,7 +30,7 @@ interface LotteryContextType {
   purchasedTickets: { lotteryId: string; ticketNumbers: number[] }[];
   createLottery: (lottery: Omit<Lottery, "id" | "tickets" | "active">) => void;
   buyTickets: (lotteryId: string, ticketNumbers: number[]) => boolean;
-  closeLottery: (lotteryId: string) => void;
+  closeLottery: (lotteryId: string) => boolean;
   addFunds: (amount: number) => void;
 }
 
@@ -123,12 +123,16 @@ export const LotteryProvider = ({ children }: { children: ReactNode }) => {
     return true;
   };
 
-  const closeLottery = (lotteryId: string) => {
+  const closeLottery = (lotteryId: string): boolean => {
     const lottery = lotteries.find((l) => l.id === lotteryId);
-    if (!lottery) return;
+    if (!lottery) return false;
 
     const soldTickets = lottery.tickets.filter((t) => t.sold);
-    if (soldTickets.length === 0) return;
+    
+    // Check if there are at least 2 tickets sold for minimum participation
+    if (soldTickets.length < 2) {
+      return false;
+    }
 
     const winningTicket = soldTickets[Math.floor(Math.random() * soldTickets.length)];
     const prize = lottery.ticketPrice * soldTickets.length;
@@ -148,6 +152,8 @@ export const LotteryProvider = ({ children }: { children: ReactNode }) => {
           : l
       )
     );
+
+    return true;
   };
 
   const addFunds = (amount: number) => {

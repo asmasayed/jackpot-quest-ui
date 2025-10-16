@@ -43,11 +43,19 @@ const AdminDashboard = () => {
   };
 
   const handleCloseLottery = (lotteryId: string) => {
-    closeLottery(lotteryId);
-    toast.success("Lottery closed and winner selected!", {
-      description: "Check the lottery card for winner details",
-      icon: <Trophy className="h-5 w-5" />,
-    });
+    const success = closeLottery(lotteryId);
+    
+    if (success) {
+      toast.success("Lottery closed and winner selected!", {
+        description: "Check the lottery card for winner details",
+        icon: <Trophy className="h-5 w-5" />,
+      });
+    } else {
+      toast.error("Cannot close lottery yet!", {
+        description: "At least 2 participants are required to draw a winner",
+        icon: <Users className="h-5 w-5" />,
+      });
+    }
   };
 
   const getLotteryParticipants = (lotteryId: string) => {

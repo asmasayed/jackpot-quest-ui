@@ -6,6 +6,16 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { ShoppingCart, Trophy, Ticket, CheckCircle, Plus, Minus } from "lucide-react";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -23,6 +33,7 @@ const UserDashboard = () => {
   const activeLotteries = lotteries.filter((l) => l.active);
   const selectedLottery = lotteries.find((l) => l.id === selectedLotteryId);
   const [ticketCount, setTicketCount] = useState(1);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const totalCost = ticketCount * (selectedLottery?.ticketPrice || 0);
   const myTickets = purchasedTickets.find((p) => p.lotteryId === selectedLotteryId);
   
@@ -59,6 +70,16 @@ const UserDashboard = () => {
       return;
     }
 
+    // Show confirmation dialog if buying 1-2 tickets to encourage buying more
+    if (ticketCount <= 2) {
+      setShowConfirmDialog(true);
+      return;
+    }
+
+    completePurchase();
+  };
+
+  const completePurchase = () => {
     // Get available ticket numbers
     const availableTicketNumbers = selectedLottery?.tickets
       .filter(t => !t.sold)
@@ -72,6 +93,7 @@ const UserDashboard = () => {
         icon: <CheckCircle className="h-5 w-5" />,
       });
       setTicketCount(1);
+      setShowConfirmDialog(false);
     } else {
       toast.error("Failed to purchase tickets. Please try again.");
     }
@@ -126,7 +148,7 @@ const UserDashboard = () => {
                 <div className="flex flex-col items-center justify-center space-y-8">
                   {/* Animated Ticket Icon */}
                   <div className="relative">
-                    {Array.from({ length: Math.min(ticketCount, 10) }).map((_, i) => (
+                    {Array.from({ length: Math.min(ticketCount, 5) }).map((_, i) => (
                       <div
                         key={i}
                         className={cn(
@@ -253,6 +275,37 @@ const UserDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Confirmation Dialog for Small Purchases */}
+        <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+          <AlertDialogContent className="border-primary/30 bg-card">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2 text-foreground">
+                <Trophy className="h-5 w-5 text-primary" />
+                Buying Only {ticketCount} Ticket{ticketCount !== 1 ? "s" : ""}?
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-muted-foreground">
+                You're purchasing just {ticketCount} ticket{ticketCount !== 1 ? "s" : ""}. 
+                Buying more tickets significantly increases your chances of winning the {selectedLottery?.name}!
+                <br /><br />
+                <span className="font-semibold text-primary">
+                  💡 Tip: More tickets = Better odds of winning!
+                </span>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setShowConfirmDialog(false)}>
+                Buy More Tickets
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={completePurchase}
+                className="bg-gradient-gold text-primary-foreground hover:opacity-90"
+              >
+                Confirm Purchase
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
