@@ -19,7 +19,7 @@ const AdminDashboard = () => {
 
   const activeLotteries = lotteries.filter((l) => l.active);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     if (!formData.name || !formData.ticketPrice || !formData.totalTickets || !formData.deadline) {
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
     setFormData({ name: "", ticketPrice: "", totalTickets: "", deadline: "" });
   };
 
-  const handleCloseLottery = (lotteryId: string) => {
+  const handleCloseLottery = (lotteryId) => {
     const success = closeLottery(lotteryId);
     
     if (success) {
@@ -58,11 +58,11 @@ const AdminDashboard = () => {
     }
   };
 
-  const getLotteryParticipants = (lotteryId: string) => {
+  const getLotteryParticipants = (lotteryId) => {
     const lottery = lotteries.find((l) => l.id === lotteryId);
     if (!lottery) return [];
     
-    const participants = new Map<string, number>();
+    const participants = new Map();
     lottery.tickets.forEach((ticket) => {
       if (ticket.sold && ticket.owner) {
         participants.set(ticket.owner, (participants.get(ticket.owner) || 0) + 1);

@@ -1,14 +1,7 @@
 import { Ticket } from "lucide-react";
-import { Ticket as TicketType } from "@/contexts/LotteryContext";
 import { cn } from "@/lib/utils";
 
-interface TicketCardProps {
-  ticket: TicketType;
-  selected?: boolean;
-  onToggle?: () => void;
-}
-
-const TicketCard = ({ ticket, selected, onToggle }: TicketCardProps) => {
+const TicketCard = ({ ticket, selected, onToggle }) => {
   const isDisabled = ticket.sold;
 
   return (

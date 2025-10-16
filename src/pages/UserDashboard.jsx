@@ -27,8 +27,8 @@ import { cn } from "@/lib/utils";
 const UserDashboard = () => {
   const location = useLocation();
   const { lotteries, buyTickets, walletBalance, purchasedTickets } = useLottery();
-  const [selectedLotteryId, setSelectedLotteryId] = useState<string>("");
-  const [selectedTickets, setSelectedTickets] = useState<number[]>([]);
+  const [selectedLotteryId, setSelectedLotteryId] = useState("");
+  const [selectedTickets, setSelectedTickets] = useState([]);
 
   const activeLotteries = lotteries.filter((l) => l.active);
   const selectedLottery = lotteries.find((l) => l.id === selectedLotteryId);

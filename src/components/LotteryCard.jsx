@@ -1,13 +1,8 @@
 import { Calendar, Coins, Users, Trophy } from "lucide-react";
-import { Lottery } from "@/contexts/LotteryContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-interface LotteryCardProps {
-  lottery: Lottery;
-}
-
-const LotteryCard = ({ lottery }: LotteryCardProps) => {
+const LotteryCard = ({ lottery }) => {
   const navigate = useNavigate();
   const soldTickets = lottery.tickets.filter((t) => t.sold).length;
   const progress = (soldTickets / lottery.totalTickets) * 100;
@@ -70,20 +65,6 @@ const LotteryCard = ({ lottery }: LotteryCardProps) => {
             </p>
           </div>
         </div>
-
-        {/* Progress Bar */}
-       {/*  <div className="space-y-2">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Progress</span>
-            <span>{progress.toFixed(0)}%</span>
-          </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full bg-gradient-gold transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div> */}
 
         {/* Winner Info */}
         {lottery.winner && (

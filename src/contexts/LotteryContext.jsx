@@ -1,43 +1,9 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-export interface Ticket {
-  id: string;
-  number: number;
-  price: number;
-  sold: boolean;
-  owner?: string;
-}
-
-export interface Lottery {
-  id: string;
-  name: string;
-  ticketPrice: number;
-  totalTickets: number;
-  deadline: string;
-  active: boolean;
-  tickets: Ticket[];
-  winner?: {
-    ticketNumber: number;
-    userId: string;
-    prize: number;
-  };
-}
-
-interface LotteryContextType {
-  lotteries: Lottery[];
-  walletBalance: number;
-  currentUser: string;
-  purchasedTickets: { lotteryId: string; ticketNumbers: number[] }[];
-  createLottery: (lottery: Omit<Lottery, "id" | "tickets" | "active">) => void;
-  buyTickets: (lotteryId: string, ticketNumbers: number[]) => boolean;
-  closeLottery: (lotteryId: string) => boolean;
-  addFunds: (amount: number) => void;
-}
-
-const LotteryContext = createContext<LotteryContextType | undefined>(undefined);
+const LotteryContext = createContext(undefined);
 
 // Mock initial data
-const generateTickets = (count: number, price: number): Ticket[] => {
+const generateTickets = (count, price) => {
   return Array.from({ length: count }, (_, i) => ({
     id: `ticket-${i + 1}`,
     number: i + 1,
@@ -46,7 +12,7 @@ const generateTickets = (count: number, price: number): Ticket[] => {
   }));
 };
 
-const initialLotteries: Lottery[] = [
+const initialLotteries = [
   {
     id: "lottery-1",
     name: "Golden Jackpot",
@@ -67,16 +33,14 @@ const initialLotteries: Lottery[] = [
   },
 ];
 
-export const LotteryProvider = ({ children }: { children: ReactNode }) => {
-  const [lotteries, setLotteries] = useState<Lottery[]>(initialLotteries);
+export const LotteryProvider = ({ children }) => {
+  const [lotteries, setLotteries] = useState(initialLotteries);
   const [walletBalance, setWalletBalance] = useState(10.0);
   const [currentUser] = useState("user-" + Math.random().toString(36).substr(2, 9));
-  const [purchasedTickets, setPurchasedTickets] = useState<
-    { lotteryId: string; ticketNumbers: number[] }[]
-  >([]);
+  const [purchasedTickets, setPurchasedTickets] = useState([]);
 
-  const createLottery = (lotteryData: Omit<Lottery, "id" | "tickets" | "active">) => {
-    const newLottery: Lottery = {
+  const createLottery = (lotteryData) => {
+    const newLottery = {
       ...lotteryData,
       id: `lottery-${Date.now()}`,
       active: true,
@@ -85,7 +49,7 @@ export const LotteryProvider = ({ children }: { children: ReactNode }) => {
     setLotteries((prev) => [newLottery, ...prev]);
   };
 
-  const buyTickets = (lotteryId: string, ticketNumbers: number[]): boolean => {
+  const buyTickets = (lotteryId, ticketNumbers) => {
     const lottery = lotteries.find((l) => l.id === lotteryId);
     if (!lottery) return false;
 
@@ -123,7 +87,7 @@ export const LotteryProvider = ({ children }: { children: ReactNode }) => {
     return true;
   };
 
-  const closeLottery = (lotteryId: string): boolean => {
+  const closeLottery = (lotteryId) => {
     const lottery = lotteries.find((l) => l.id === lotteryId);
     if (!lottery) return false;
 
@@ -157,7 +121,7 @@ export const LotteryProvider = ({ children }: { children: ReactNode }) => {
     return true;
   };
 
-  const addFunds = (amount: number) => {
+  const addFunds = (amount) => {
     setWalletBalance((prev) => prev + amount);
   };
 
