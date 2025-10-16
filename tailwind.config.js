@@ -1,8 +1,14 @@
-import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
+
+/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: "class",
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -65,52 +71,32 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
         "glow-pulse": {
-          "0%, 100%": {
-            boxShadow: "0 0 20px hsla(45 100% 51% / 0.3)",
-          },
-          "50%": {
-            boxShadow: "0 0 40px hsla(45 100% 51% / 0.6)",
-          },
+          "0%, 100%": { boxShadow: "0 0 20px hsla(45 100% 51% / 0.3)" },
+          "50%": { boxShadow: "0 0 40px hsla(45 100% 51% / 0.6)" },
         },
         "float": {
-          "0%, 100%": {
-            transform: "translateY(0px)",
-          },
-          "50%": {
-            transform: "translateY(-10px)",
-          },
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
         },
         "shine": {
-          "0%": {
-            backgroundPosition: "200% center",
-          },
-          "100%": {
-            backgroundPosition: "-200% center",
-          },
+          "0%": { backgroundPosition: "200% center" },
+          "100%": { backgroundPosition: "-200% center" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
-        "float": "float 3s ease-in-out infinite",
-        "shine": "shine 3s linear infinite",
+        float: "float 3s ease-in-out infinite",
+        shine: "shine 3s linear infinite",
       },
       backgroundImage: {
         "gradient-gold": "var(--gradient-gold)",
@@ -120,9 +106,9 @@ export default {
       boxShadow: {
         "glow-gold": "var(--glow-gold)",
         "glow-purple": "var(--glow-purple)",
-        "card": "var(--shadow-card)",
+        card: "var(--shadow-card)",
       },
     },
   },
- plugins: [tailwindcssAnimate],
-} satisfies Config;
+  plugins: [tailwindcssAnimate],
+};
