@@ -152,7 +152,7 @@ const AdminDashboard = () => {
               <div className="space-y-6">
                 {activeLotteries.map((lottery) => {
                   const participants = getLotteryParticipants(lottery.id);
-                  const soldTickets = lottery.tickets.filter((t) => t.sold).length;
+                  const soldTickets = lottery.tickets.filter((t) => t.sold && t.owner).length;
 
                   return (
                     <Card key={lottery.id} className="border-border bg-card p-6">
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
                         </div>
                         <Button
                           onClick={() => handleCloseLottery(lottery.id)}
-                          disabled={soldTickets === 0}
+                          disabled={soldTickets < 2}
                           className="bg-gradient-purple font-semibold text-secondary-foreground hover:opacity-90"
                         >
                           <Lock className="mr-2 h-4 w-4" />

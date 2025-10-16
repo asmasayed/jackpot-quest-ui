@@ -127,9 +127,10 @@ export const LotteryProvider = ({ children }: { children: ReactNode }) => {
     const lottery = lotteries.find((l) => l.id === lotteryId);
     if (!lottery) return false;
 
-    const soldTickets = lottery.tickets.filter((t) => t.sold);
+    // Check for tickets that are both sold AND have an owner (actual participants)
+    const soldTickets = lottery.tickets.filter((t) => t.sold && t.owner);
     
-    // Check if there are at least 2 tickets sold for minimum participation
+    // Check if there are at least 2 actual participants
     if (soldTickets.length < 2) {
       return false;
     }
